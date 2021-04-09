@@ -13,5 +13,9 @@ class Image(db.Model, BaseMixin):
         self.image_uri = image_uri
 
     @staticmethod
+    def get_by_report_id(report_id):
+        return Image.query.filter_by(report_id=report_id).all()
+
+    @staticmethod
     def upload(report_id, image_uri):
         return Image(report_id, image_uri).save()

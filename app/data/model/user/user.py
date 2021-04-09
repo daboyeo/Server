@@ -14,9 +14,17 @@ class User(db.Model, BaseMixin):
         self.profile_uri = profile_uri
 
     @staticmethod
-    def signup(ud, name, number):
-        return User(id, name, number).save()
+    def signup(id, name, profile_uri):
+        return User(id, name, profile_uri).save()
 
     @staticmethod
     def find_by_id(id):
         return User.query.filter_by(id=id).first()
+
+    @staticmethod
+    def update_profile(id, name, profile_uri):
+        user = User.query.filter_by(id=id).first()
+        user.name = name
+        user.profile_uri = profile_uri
+        user.save()
+        return user

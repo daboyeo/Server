@@ -13,5 +13,13 @@ class Tag(db.Model, BaseMixin):
         self.reporter_id = report_id
 
     @staticmethod
+    def get_by_report_id(report_id):
+        return Tag.query.filter_by(report_id=report_id).all()
+
+    @staticmethod
+    def get_by_content(content):
+        return Tag.query.filter_by(content=content).all()
+
+    @staticmethod
     def tag(content, report_id):
         return Tag(content, report_id).save()

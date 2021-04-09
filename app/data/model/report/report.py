@@ -1,4 +1,6 @@
 from app.data.model.base import BaseMixin
+from app.data.model.report.image import Image
+from app.data.model.report.tag import Tag
 from app.extension import db
 
 
@@ -15,5 +17,27 @@ class Report(db.Model, BaseMixin):
         self.reporter_id = reporter_id
 
     @staticmethod
-    def report(location, content, reporter_id):
-        return Report(location, content, reporter_id).save()
+    def get_all_reports():
+        return Report.query.all()
+
+    @staticmethod
+    def search_reports(query):
+        return Report.query.filter(Report.content.like(f'%{query}%')).all()
+
+    @staticmethod
+    def search_reports_by_tag(tag):
+        v = []
+        for t in Tag.get_by_content(tag):
+            v += Report.query.filter(Report.get_by_id(t.report_id)).all()
+        return v
+
+    @staticmethod
+    def get_by_id(report_id):
+        return Report.query.filter_by(report_id=report_id).first()
+
+    @staticmethod
+    def report(location, content, reporter_id, image_uris, tags):
+        report = Report(location, content, reporter_id).save()
+        for image_uri in image_uris: Image.upload(report.id, image_uri)
+        for tag in tags: Tag.tag(tag, report.id)
+        return report
