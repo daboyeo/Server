@@ -11,9 +11,14 @@ def register_extension(flask_app: Flask):
 
 
 def register_blueprint(flask_app: Flask):
-    # from srs_server.view.apply import apply_blueprint
-    # flask_app.register_blueprint(apply_blueprint)
-    pass
+    from app.view.user import user_blueprint
+    flask_app.register_blueprint(user_blueprint)
+
+
+def create_table(flask_app):
+    from app.extension import db
+    with flask_app.app_context():
+        db.create_all()
 
 
 def create_app(config_name: str) -> Flask:
@@ -22,5 +27,6 @@ def create_app(config_name: str) -> Flask:
 
     register_extension(flask_app)
     register_blueprint(flask_app)
+    create_table(flask_app)
 
     return flask_app
