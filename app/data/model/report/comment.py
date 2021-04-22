@@ -19,5 +19,9 @@ class Comment(db.Model, BaseMixin):
         return Comment(content, report_id, user_id).save()
 
     @staticmethod
+    def get_by_id(id):
+        return Comment.query.filter_by(id=id).first()
+
+    @staticmethod
     def get_by_report_id(report_id):
         return Comment.query.filter_by(report_id=report_id).all()

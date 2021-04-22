@@ -1,6 +1,6 @@
 from flask import request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_restful import Resource
+from flask_restful import Resource, abort
 
 from app.data.model.report.comment import Comment
 
@@ -15,3 +15,15 @@ class CommentView(Resource):
             "content": comment.content,
             "report_id": comment.report_id
         }, 201
+
+    @jwt_required()
+    def delete(self):
+        payload = request.json
+        comment = Comment.get_by_id(payload["comment_id"])
+
+        if not comment: abort(404)
+        comment.delete()
+
+        return {
+            "comment_id": comment.id
+               }, 200

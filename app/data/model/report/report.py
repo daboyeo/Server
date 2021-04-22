@@ -32,6 +32,10 @@ class Report(db.Model, BaseMixin):
         return v
 
     @staticmethod
+    def search_reports_by_user(user):
+        return Report.query.filter_by(reporter_id=user).all()
+
+    @staticmethod
     def get_by_id(report_id):
         return Report.query.filter_by(report_id=report_id).first()
 
@@ -41,3 +45,12 @@ class Report(db.Model, BaseMixin):
         for image_uri in image_uris: Image.upload(report.id, image_uri)
         for tag in tags: Tag.tag(tag, report.id)
         return report
+
+    def update_report(self, location, content, image_uris, tags):
+        self.location = location
+        self.content = content
+        self.save()
+        for image_uri in Image.get_by_report_id(self.id): image_uri.delete()
+        for tag in Tag.get_by_report_id(self.id): tag.delete()
+        for image_uri in image_uris: Image.upload(self.id, image_uri)
+        for tag in tags: Tag.tag(tag, self.id)
