@@ -6,3 +6,6 @@ api = Api(user_blueprint)
 
 from .auth import Auth
 api.add_resource(Auth, '/auth')
+
+from .user import UserView
+api.add_resource(UserView, '')

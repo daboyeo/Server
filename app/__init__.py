@@ -14,6 +14,9 @@ def register_blueprint(flask_app: Flask):
     from app.view.user import user_blueprint
     flask_app.register_blueprint(user_blueprint)
 
+    from app.view.report import report_blueprint
+    flask_app.register_blueprint(report_blueprint)
+
 
 def create_table(flask_app):
     from app.extension import db
