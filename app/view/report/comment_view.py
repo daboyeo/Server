@@ -18,8 +18,7 @@ class CommentView(Resource):
 
     @jwt_required()
     def delete(self):
-        payload = request.json
-        comment = Comment.get_by_id(payload["comment_id"])
+        comment = Comment.get_by_id(request.args.get("comment_id"))
 
         if not comment: abort(404)
         comment.delete()

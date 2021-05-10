@@ -11,6 +11,7 @@ from app.data.model.report.tag import Tag
 
 
 class ReportView(Resource):
+    @jwt_required()
     def get(self):
         query = request.args.get("query")
         tag = request.args.get("tag")
@@ -24,7 +25,9 @@ class ReportView(Resource):
     @jwt_required()
     def post(self):
         payload = request.json
-        report = Report.report(payload.location, payload.content, get_jwt_identity(), payload.image_uris, payload.tags)
+        report = Report.report(
+            payload["location"], payload["content"], get_jwt_identity(), payload["image_uris"], payload["tags"]
+        )
         return {
             "report_id": report.id
         }, 201
@@ -37,15 +40,14 @@ class ReportView(Resource):
         if not report: abort(404)
         if report.reporter_id != get_jwt_identity(): abort(401)
 
-        report.update_report(payload.location, payload.content, payload.image_uris, payload.tags)
+        report.update_report(payload["location"], payload["content"], payload["image_uris"], payload["tags"])
         return {
             "report_id": report.id
         }, 200
 
     @jwt_required()
     def delete(self):
-        payload = request.json
-        report = Report.get_by_id(payload.report_id)
+        report = Report.get_by_id(request.args.get("report_id"))
         report.delete()
         return {
             "report_id": report.id
@@ -66,8 +68,8 @@ class ReportDetail(Resource):
             "comments": [map_comment(comment) for comment in Comment.get_by_report_id(report.id)],
             "num_of_sympathy": len(Sympathy.get_by_report_id(report.id)),
             "is_sympathy": Sympathy.is_sympathy(get_jwt_identity(), report.id),
-            "created_at": report.created_at,
-            "updated_at": report.updated_at,
+            "created_at": report.created_at.ctime(),
+            "updated_at": report.updated_at.ctime(),
             "location": report.location
         }
 
@@ -95,7 +97,7 @@ def map(report: Report, user_id):
         "image_uris": [image.image_uri for image in Image.get_by_report_id(report.id)],
         "num_of_sympathy": len(Sympathy.get_by_report_id(report.id)),
         "is_sympathy": Sympathy.is_sympathy(user_id, report.id),
-        "created_at": report.created_at,
-        "updated_at": report.updated_at,
+        "created_at": report.created_at.ctime(),
+        "updated_at": report.updated_at.ctime(),
         "location": report.location
     }

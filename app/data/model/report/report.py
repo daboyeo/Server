@@ -7,7 +7,7 @@ from app.extension import db
 class Report(db.Model, BaseMixin):
     __tablename__ = 'tbl_report'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    location = db.Column(db.String(7), nullable=False)
+    location = db.Column(db.String(255), nullable=False)
     content = db.Column(db.String(500), nullable=False)
     reporter_id = db.Column(db.String(255), db.ForeignKey('tbl_user.id', ondelete='CASCADE'), nullable=False)
 

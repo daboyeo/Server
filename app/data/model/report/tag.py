@@ -10,7 +10,7 @@ class Tag(db.Model, BaseMixin):
 
     def __init__(self, content, report_id):
         self.content = content
-        self.reporter_id = report_id
+        self.report_id = report_id
 
     @staticmethod
     def get_by_report_id(report_id):
