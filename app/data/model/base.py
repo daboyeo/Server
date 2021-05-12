@@ -1,9 +1,11 @@
+import datetime
 from app.extension import db
 
 
 class BaseMixin:
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-    updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+    kst = datetime.timezone(datetime.timedelta(hours=9))
+    created_at = db.Column(db.DateTime, server_default=db.func.now(tz=kst))
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(tz=kst), server_onupdate=db.func.now(tz=kst))
 
     def save(self):
         db.session.add(self)

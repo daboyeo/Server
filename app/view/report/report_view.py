@@ -55,8 +55,9 @@ class ReportView(Resource):
 
 
 class ReportDetail(Resource):
+    @jwt_required()
     def get(self, id):
-        report = Report.get_by_id(id)
+        report = Report.get_by_id(int(id))
         reporter = User.find_by_id(report.reporter_id)
         return {
             "report_id": report.id,

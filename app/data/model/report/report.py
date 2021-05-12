@@ -37,7 +37,7 @@ class Report(db.Model, BaseMixin):
 
     @staticmethod
     def get_by_id(report_id):
-        return Report.query.filter_by(report_id=report_id).first()
+        return Report.query.filter_by(id=report_id).first()
 
     @staticmethod
     def report(location, content, reporter_id, image_uris, tags):

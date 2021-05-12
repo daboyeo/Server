@@ -6,7 +6,7 @@ api = Api(report_blueprint)
 
 from .report_view import ReportView, ReportDetail
 api.add_resource(ReportView, '')
-api.add_resource(ReportDetail, '<id>')
+api.add_resource(ReportDetail, "/<string:id>")
 
 from .comment_view import CommentView
 api.add_resource(CommentView, '/comment')
